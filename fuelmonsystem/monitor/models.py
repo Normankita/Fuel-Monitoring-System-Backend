@@ -113,3 +113,11 @@ class FuelRecord(models.Model):
             return self.generator
         else:
             return None
+        
+        
+class ReceivedData(models.Model):
+    data = models.TextField()
+    received_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"ReceivedData object - ID: {self.id}, Received At: {self.received_at}"        

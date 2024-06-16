@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .report_decoder import decode_message
+from .models import ReceivedData
 
 # Create your views here.
 class LoginView(APIView):
@@ -243,3 +244,9 @@ def parse_device_data(raw_data):
     # This is a placeholder for the parsing logic
     # Split the string and extract the needed parts
     return raw_data  # Replace with actual parsed data
+
+
+
+def received_data_view(request):
+    received_data = ReceivedData.objects.all()
+    return render(request, 'socketapp/received_data.html', {'received_data': received_data})

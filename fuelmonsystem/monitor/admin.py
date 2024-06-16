@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,Sensor,GPStracker,Vehicle,Generator,SensorCallibration,SensorReading,FuelRecord,Location, Trip, Driver
+from .models import ReceivedData, User,Sensor,GPStracker,Vehicle,Generator,SensorCallibration,SensorReading,FuelRecord,Location, Trip, Driver
 
 # Register your models here.
 
@@ -14,3 +14,4 @@ admin.site.register(FuelRecord)
 admin.site.register(Location)
 admin.site.register(Trip)
 admin.site.register(Driver)
+admin.site.register(ReceivedData)

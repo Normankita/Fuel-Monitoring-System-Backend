@@ -1,0 +1,16 @@
+<!-- socketapp/templates/socketapp/received_data.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Received Data</title>
+</head>
+<body>
+    <h1>Received Data</h1>
+    <ul>
+        {% for data in received_data %}
+            <li>{{ data.data }} - Received at: {{ data.received_at }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
