@@ -18,7 +18,7 @@ urlpatterns = [
     path('monitor/sensor-readings', views.SensorReadingView.as_view()),
     # path('api/get-reading/', views.ReportDecoder.as_view())
     # path('get-reading/', views.ReportDecoder.as_view())
-    path('/', views.capture_device_data, name='capture_device_data'),
+    path('', views.capture_device_data, name='capture_device_data'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
