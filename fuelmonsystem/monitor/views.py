@@ -10,6 +10,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .report_decoder import decode_message
 
 # Create your views here.
 class LoginView(APIView):
@@ -219,6 +220,26 @@ class TripView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# class ReportDecoder(APIView):
+#     decode_message(message)
 
-        
 
+
+# @csrf_exempt
+def capture_device_data(request):
+    if request.method == 'POST':
+        raw_data = request.body.decode('utf-16')
+        # Process the raw data here
+        print("Start Here")
+        print(parsed_data)
+        print("Ends Here")
+        parsed_data = parse_device_data(raw_data)
+        # You can store parsed_data in the database or perform other actions
+        return JsonResponse({'status': 'success', 'data': parsed_data})
+    return JsonResponse({'status': 'failure', 'message': 'Only POST requests are allowed'}, status=400)
+
+def parse_device_data(raw_data):
+    # This is a placeholder for the parsing logic
+    # Split the string and extract the needed parts
+    return raw_data  # Replace with actual parsed data
