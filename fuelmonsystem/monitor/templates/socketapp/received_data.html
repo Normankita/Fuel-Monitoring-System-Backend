@@ -10,6 +10,8 @@
     <ul>
         {% for data in received_data %}
             <li>{{ data.data }} - Received at: {{ data.received_at }}</li>
+        {% empty %}
+            <li>No data received yet.</li>
         {% endfor %}
     </ul>
 </body>

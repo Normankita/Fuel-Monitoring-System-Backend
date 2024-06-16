@@ -1,20 +1,18 @@
 # socketapp/socket_handler.py
-from django.conf import settings
 import socket
 import threading
+from django.conf import settings
+from .models import ReceivedData  # Import your model for storing data
 
 def handle_client(client_socket):
-    from .models import ReceivedData  # Import inside function to avoid AppRegistryNotReady
-
     while True:
         data = client_socket.recv(1024)
         if not data:
             break
-        # Process the received data as needed
         decoded_data = data.decode()
-        print(f"Received data: {decoded_data}")
+        print(f"Received data: {decoded_data}")  # Print received data to console
 
-        # Store received data in a Django model
+        # Store received data in Django model if enabled
         if settings.STORE_RECEIVED_DATA:
             ReceivedData.objects.create(data=decoded_data)
 
@@ -22,10 +20,10 @@ def handle_client(client_socket):
 
 def start_socket_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('18.217.109.178', 8000))  # Replace with your desired IP and port
+    server_socket.bind(('0.0.0.0', 8000))  # Bind to all available interfaces on port 8000
     server_socket.listen(5)
 
-    print("Socket server listening...")
+    print("Socket server listening on port 8000...")
 
     while True:
         client_socket, addr = server_socket.accept()
