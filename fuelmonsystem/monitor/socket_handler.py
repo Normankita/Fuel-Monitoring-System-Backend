@@ -37,3 +37,5 @@ def start_socket_server():
 # Conditional initialization of socket server
 if settings.RUN_SOCKET_SERVER:
     start_socket_server()
+else:
+    print("Socket server is not enabled in settings.")

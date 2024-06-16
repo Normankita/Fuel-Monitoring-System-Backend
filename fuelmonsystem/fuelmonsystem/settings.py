@@ -26,6 +26,8 @@ SECRET_KEY = 'django-insecure-9zoa=kfdpy6u4+!1)vq^_ejh+^3b#ury6&e!($9&d@ld&96pw6
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+RUN_SOCKET_SERVER = True 
+STORE_RECEIVED_DATA = True 
 
 
 # Application definition
