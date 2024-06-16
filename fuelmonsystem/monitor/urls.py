@@ -19,6 +19,7 @@ urlpatterns = [
     # path('api/get-reading/', views.ReportDecoder.as_view())
     # path('get-reading/', views.ReportDecoder.as_view())
     path('', views.capture_device_data, name='capture_device_data'),
+    path('received-data/', views.received_data_view, name='received-data')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
