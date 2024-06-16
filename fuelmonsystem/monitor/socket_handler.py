@@ -1,4 +1,5 @@
-# socketapp/socket_handler.py
+# socket_handler.py
+
 import socket
 import threading
 from django.conf import settings
@@ -19,23 +20,20 @@ def handle_client(client_socket):
     client_socket.close()
 
 def start_socket_server():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 8000))  # Bind to all available interfaces on port 8000
-    server_socket.listen(5)
+    if settings.RUN_SOCKET_SERVER:
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(('0.0.0.0', 8000))  # Bind to all available interfaces on port 8000
+        server_socket.listen(5)
 
-    print("Socket server listening on port 8000...")
+        print("Socket server listening on port 8000...")
 
-    while True:
-        client_socket, addr = server_socket.accept()
-        print(f"Accepted connection from {addr}")
-        
-        client_handler = threading.Thread(target=handle_client, args=(client_socket,))
-        client_handler.start()
+        while True:
+            client_socket, addr = server_socket.accept()
+            print(f"Accepted connection from {addr}")
+            
+            client_handler = threading.Thread(target=handle_client, args=(client_socket,))
+            client_handler.start()
 
-    server_socket.close()
-
-# Conditional initialization of socket server
-if settings.RUN_SOCKET_SERVER:
-    start_socket_server()
-else:
-    print("Socket server is not enabled in settings.")
+        server_socket.close()
+    else:
+        print("Socket server is not enabled in settings.")
