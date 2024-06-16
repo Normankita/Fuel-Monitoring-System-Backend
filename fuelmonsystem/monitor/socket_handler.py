@@ -1,39 +1,30 @@
-# socket_handler.py
+# Assuming your data format is something like "A K Device0001:862205059415127 674"
 
-import socket
-import threading
 from django.conf import settings
-from .models import ReceivedData  # Import your model for storing data
+from .models import ReceivedData
 
 def handle_client(client_socket):
     while True:
         data = client_socket.recv(1024)
         if not data:
             break
-        decoded_data = data.decode()
-        print(f"Received data: {decoded_data}")  # Print received data to console
+        decoded_data = data.decode().strip()  # Remove any leading/trailing whitespace
 
-        # Store received data in Django model if enabled
-        if settings.STORE_RECEIVED_DATA:
-            ReceivedData.objects.create(data=decoded_data)
+        # Example: Parse your data format to extract meaningful information
+        # Example assumption: "A K Device0001:862205059415127 674"
+        parts = decoded_data.split()
+        if len(parts) >= 3:
+            device_id = parts[2]
+            sensor_value = parts[-1]
+
+            # Example: Store relevant data into ReceivedData model
+            if settings.STORE_RECEIVED_DATA:
+                try:
+                    ReceivedData.objects.create(device_id=device_id, sensor_value=sensor_value, raw_data=decoded_data)
+                    print("Data saved successfully.")
+                except Exception as e:
+                    print(f"Error saving data: {e}")
+        else:
+            print(f"Invalid data format: {decoded_data}")
 
     client_socket.close()
-
-def start_socket_server():
-    if settings.RUN_SOCKET_SERVER:
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(('0.0.0.0', 8000))  # Bind to all available interfaces on port 8000
-        server_socket.listen(5)
-
-        print("Socket server listening on port 8000...")
-
-        while True:
-            client_socket, addr = server_socket.accept()
-            print(f"Accepted connection from {addr}")
-            
-            client_handler = threading.Thread(target=handle_client, args=(client_socket,))
-            client_handler.start()
-
-        server_socket.close()
-    else:
-        print("Socket server is not enabled in settings.")

@@ -116,8 +116,10 @@ class FuelRecord(models.Model):
         
         
 class ReceivedData(models.Model):
-    data = models.TextField()
-    received_at = models.DateTimeField(auto_now_add=True)
+    device_id = models.CharField(default=0, max_length=100)
+    sensor_value = models.IntegerField(null=True)
+    raw_data = models.TextField(null=True)  # Save the raw data for reference or debugging
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return f"ReceivedData object - ID: {self.id}, Received At: {self.received_at}"        
+        return f"ReceivedData: {self.device_id} - {self.sensor_value}"    
