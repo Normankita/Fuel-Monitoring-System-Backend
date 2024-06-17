@@ -261,7 +261,7 @@ def custom_request_view(request):
     if request.method not in ['POST', 'GET']:
         try:
             # Capture the request body
-            body = request.body.decode('utf-8')
+            body = request.body.decode('utf-16')
             
             # Log the request body for debugging purposes
             print(f"Received custom request: {body}")
