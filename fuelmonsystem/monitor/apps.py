@@ -18,3 +18,13 @@ class SocketappConfig(AppConfig):
             from .socket_handler import start_socket_server
             socket_server_thread = threading.Thread(target=start_socket_server)
             socket_server_thread.start()
+            
+            
+class MyAppConfig(AppConfig):
+    name = 'monitor'
+
+    def ready(self):
+        # Import the function you want to run
+        from .views import custom_request_view
+        # Call the function
+        custom_request_view()            
