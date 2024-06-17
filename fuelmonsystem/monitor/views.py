@@ -261,30 +261,31 @@ def custom_request_view(request):
     if request.method not in ['POST', 'GET']:
         try:
             # Capture the request body
+            # body = request.body
             body = request.body.decode('utf-16')
             
             # Log the request body for debugging purposes
-            print(f"Received custom request: {body}")
+            print(f"This is Body: {body}")
             
             # Extract data using a regular expression or string manipulation
             # Example regular expression to extract data
-            pattern = re.compile(r"A P (?P<device>\w+):(?P<id>\w+) (?P<data>.*)")
-            match = pattern.match(body)
+            # pattern = re.compile(r"A P (?P<device>\w+):(?P<id>\w+) (?P<data>.*)")
+            # match = pattern.match(body)
             
-            if match:
-                device = match.group('device')
-                device = match.group('id')
-                data = match.group('data')
+            # if match:
+            #     device = match.group('device')
+            #     device = match.group('id')
+            #     data = match.group('data')
                 
-                # Save extracted data to the database
-                print(f"Received data: {data}")
-                print(device,device,device)
-                # your_model_instance = YourModel(device=device, device_id=device_id, data=data)
-                # your_model_instance.save()
+            #     # Save extracted data to the database
+            #     print(f"Received data: {data}")
+            #     print(device,device,device)
+            #     # your_model_instance = YourModel(device=device, device_id=device_id, data=data)
+            #     # your_model_instance.save()
                 
-                return JsonResponse({'status': 'success', 'message': 'Data saved successfully'})
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format'}, status=400)
+            #     return JsonResponse({'status': 'success', 'message': 'Data saved successfully'})
+            # else:
+            #     return JsonResponse({'status': 'error', 'message': 'Invalid data format'}, status=400)
             
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
