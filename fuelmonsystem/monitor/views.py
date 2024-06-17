@@ -258,6 +258,12 @@ def received_data_view(request):
 
 @csrf_exempt  # Only for testing purposes. Ensure CSRF protection in production.
 def custom_request_view(request):
+    print(request)
+    print("Request Method:", request.method)
+    print("GET Parameters:", request.GET)
+    print("POST Parameters:", request.POST)
+    print("Headers:", request.headers)
+    print("Body:", request.body)
     if request.method not in ['POST', 'GET']:
         try:
             # Capture the request body
