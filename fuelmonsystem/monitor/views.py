@@ -11,6 +11,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .report_decoder import decode_message
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import re
+
 from .models import ReceivedData
 
 # Create your views here.
@@ -250,3 +254,38 @@ def parse_device_data(raw_data):
 def received_data_view(request):
     received_data = ReceivedData.objects.all()
     return render(request, 'socketapp/received_data.html', {'received_data': received_data})
+
+
+@csrf_exempt  # Only for testing purposes. Ensure CSRF protection in production.
+def custom_request_view(request):
+    if request.method not in ['POST', 'GET']:
+        try:
+            # Capture the request body
+            body = request.body.decode('utf-8')
+            
+            # Log the request body for debugging purposes
+            print(f"Received custom request: {body}")
+            
+            # Extract data using a regular expression or string manipulation
+            # Example regular expression to extract data
+            pattern = re.compile(r"A P (?P<device>\w+):(?P<id>\w+) (?P<data>.*)")
+            match = pattern.match(body)
+            
+            if match:
+                device = match.group('device')
+                device = match.group('id')
+                data = match.group('data')
+                
+                # Save extracted data to the database
+                print(f"Received data: {data}")
+                print(device,device,device)
+                # your_model_instance = YourModel(device=device, device_id=device_id, data=data)
+                # your_model_instance.save()
+                
+                return JsonResponse({'status': 'success', 'message': 'Data saved successfully'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid data format'}, status=400)
+            
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
