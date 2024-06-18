@@ -296,3 +296,13 @@ def custom_request_view(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def receive_data(request):
+    if request.method == "POST":
+        data = request.POST.get('data')
+        print(f"Received data in Django: {data}")
+        # Process the data as needed
+        return JsonResponse({'status': 'success'}, status=200)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

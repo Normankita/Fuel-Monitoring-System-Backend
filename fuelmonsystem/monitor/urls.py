@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from monitor import views
-from .views import custom_request_view
+from .views import receive_data
 
 urlpatterns = [
     path('monitor/registeruser', views.RegisterUser.as_view()),
@@ -19,9 +19,10 @@ urlpatterns = [
     path('monitor/sensor-readings', views.SensorReadingView.as_view()),
     # path('api/get-reading/', views.ReportDecoder.as_view())
     # path('get-reading/', views.ReportDecoder.as_view())
-    path('', views.capture_device_data, name='capture_device_data'),
-    path('received-data/', views.received_data_view, name='received-data'),
-    path('capture-request/', custom_request_view, name='capture_request'),
+    # path('', views.capture_device_data, name='capture_device_data'),
+    # path('received-data/', views.received_data_view, name='received-data'),
+    # path('capture-request/', custom_request_view, name='capture_request'),
+    path('api/receive-data/', receive_data, name='receive_data'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
