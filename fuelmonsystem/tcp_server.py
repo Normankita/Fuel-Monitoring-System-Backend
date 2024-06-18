@@ -26,14 +26,14 @@ class SimpleTCPServer(tornado.tcpserver.TCPServer):
 #     print("TCP Server listening on 18.217.109.178:8000")
 #     tornado.ioloop.IOLoop.current().start()
     
-# if __name__ == "__main__":
-#     server = SimpleTCPServer()
-#     server.listen(8000, address="127.0.0.1")  # or "0.0.0.0" to listen on all interfaces
-#     print("TCP Server listening on 127.0.0.1:8000")
-#     tornado.ioloop.IOLoop.current().start()    
-
 if __name__ == "__main__":
     server = SimpleTCPServer()
-    server.listen(8000)  # Listening on port 8000
-    print("TCP Server listening on port 8000")
-    tornado.ioloop.IOLoop.current().start()
+    server.listen(8000, address="0.0.0.0")  # or "0.0.0.0" to listen on all interfaces
+    print("TCP Server listening on 0.0.0.0:8000")
+    tornado.ioloop.IOLoop.current().start()    
+
+# if __name__ == "__main__":
+#     server = SimpleTCPServer()
+#     server.listen(8000)  # Listening on port 8000
+#     print("TCP Server listening on port 8000")
+#     tornado.ioloop.IOLoop.current().start()
