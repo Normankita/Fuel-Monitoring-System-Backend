@@ -1,0 +1,15 @@
+<!-- templates/data_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data List</title>
+</head>
+<body>
+    <h1>Received Data</h1>
+    <ul>
+    {% for record in records %}
+        <li>{{ record.received_at }}: {{ record.data }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
