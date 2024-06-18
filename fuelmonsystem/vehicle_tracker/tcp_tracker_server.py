@@ -194,7 +194,7 @@ def handle_client(client_socket):
     client_socket.close()
 
 
-def start_server(host='18.217.109.178', port=9999):
+def start_server(host='0.0.0.0', port=9999):
     global running, server
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((host, port))
