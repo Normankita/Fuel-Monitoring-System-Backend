@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from monitor.models import User, Vehicle, Generator, Sensor, SensorReading, Location, FuelRecord,GPStracker, Trip, Driver
-from monitor.serializer import UserSerializer,FuelRecordSerializer, VehicleSerializer, GeneratorSerializer, SensorSerializer, GPStrackerSerializer, LocationSerializer, SensorReadingSerializer, TripSerializer, DriverSerializer
+from monitor.serializer import DeviceReportSerializer, UserSerializer,FuelRecordSerializer, VehicleSerializer, GeneratorSerializer, SensorSerializer, GPStrackerSerializer, LocationSerializer, SensorReadingSerializer, TripSerializer, DriverSerializer
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from .token import get_user_token
 from django.http import HttpResponse, JsonResponse
@@ -15,7 +15,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import re
 
-from .models import ReceivedData
+from .models import DeviceReport, ReceivedData
 
 # Create your views here.
 class LoginView(APIView):
@@ -306,3 +306,18 @@ def receive_data(request):
         # Process the data as needed
         return JsonResponse({'status': 'success'}, status=200)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+class DeviceReportView(APIView):
+    
+    def get(self, request, format=None):
+        reports = DeviceReport.objects.all()
+        serializer = DeviceReportSerializer(reports, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer = DeviceReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

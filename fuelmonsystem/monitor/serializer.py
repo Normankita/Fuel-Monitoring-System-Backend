@@ -1,4 +1,4 @@
-from monitor.models import User, Vehicle, Generator, Sensor, SensorReading, Location, FuelRecord, GPStracker, Trip, Driver
+from monitor.models import DeviceReport, User, Vehicle, Generator, Sensor, SensorReading, Location, FuelRecord, GPStracker, Trip, Driver
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -73,3 +73,9 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = ['tripID', 'departure', 'destination','volumeToBeUsed', 'date', 'VIN']
+        
+        
+class DeviceReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceReport
+        fields = '__all__'       
