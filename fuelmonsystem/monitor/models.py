@@ -123,3 +123,22 @@ class ReceivedData(models.Model):
 
     def __str__(self):
         return f"ReceivedData: {self.device_id} - {self.sensor_value}"    
+
+
+class DeviceReport(models.Model):
+    report_type = models.CharField(max_length=50)
+    device_id = models.CharField(max_length=100)
+    IMEI = models.CharField(max_length=15)
+    time = models.DateTimeField()
+    latitude_degrees = models.FloatField()
+    longitude_degrees = models.FloatField()
+    altitude = models.FloatField()
+    course = models.FloatField()
+    speed_km_per_hour = models.FloatField()
+    alarm_status = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)
+    mileage = models.FloatField()
+    gsm_signal = models.IntegerField()
+    fuel_levels_percentage = models.FloatField()
+    engine_hours = models.FloatField()
+    power_level_volts = models.FloatField()
