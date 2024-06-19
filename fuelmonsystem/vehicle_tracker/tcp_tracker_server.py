@@ -27,27 +27,39 @@ def send_data_to_django_server(url, data):
     print(f"Response from Django server: {response.status}, {response_data}")
 
 
+
+def get_checksum_int(message):
+    checksum_int = 0
+    for c in message:
+        checksum_int += ord(c)
+    return checksum_int        
+        
+
+def get_heartbeat_responce(device_id_and_imei):
+    resp = str("C R ") #Header
+    resp += device_id_and_imei #Device id
+    flag = str("|K ")
+    resp += flag #Flag of server response message
+    resp += str(format(get_checksum_int(device_id_and_imei + flag), 'x')).upper()
+    resp += str("\r\n")
+    return resp
+
 def utf16_to_ascii(utf16_str):
     return bytes.fromhex(utf16_str).decode('utf-16')
     
 def s32(value):
     return -(value & 0x80000000) | (value & 0x7fffffff)
 
-def compute_anc_compare_crc(received_message, received_crc):
+def compute_anc_compare_crc(received_message, received_crc_str):
    # received_message = received_message.replace(received_crc , '')
     print(received_message)
-    computed_crc = 0;
-    
-    for c in received_message:
-        computed_crc += ord(c);
-        
+    computed_crc = get_checksum_int(received_message)
     print()
     print(computed_crc)
-    print(int(received_crc, 16));
+    received_crc = int(received_crc_str, 16)
+    print(received_crc)
     print()
-        
-    computed_crc = 0;
-    return (computed_crc == int(received_crc, 16))
+    return (computed_crc == received_crc)
 
 
 
@@ -125,8 +137,13 @@ def decode_A_report(message):
     ack = sensor_readings[3]
     
     #Decode Cyclic Redundancy Check (CRC) (From Index 4 of message parts list) 
-    crc = parts[4] 
+    received_crc = parts[4] 
+
+    crc_computed_message = str(parts[2]) + str(" ") + str(parts[3]) + str(" ")
     
+    print()
+   # print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    print()
     
     #convert time
     yy, mm, dd, hh, mi, ss = time[:2], time[2:4], time[4:6], time[6:8], time[8:10], time[10:12]
@@ -313,7 +330,11 @@ def decode_A_K(message):
     
     #Compute CRC of the received data and compare with the received CRC
     #if (compute_anc_compare_crc(message, received_crc) == True)
-
+    crc_computed_message = parts[2] + str(" ")
+    print()
+    #print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    print()
+    
     
     #Decode Data (Index 3 of message parts list), get 5 elements
     report_data = str(parts[3]).split(',')
@@ -408,7 +429,15 @@ def handle_client(client_socket):
             
             decoded_message = decode_message(decoded_data)
             print(decoded_message)
-            send_data_to_django_server(django_server_url, decoded_message)
+            if (decoded_message["report_type"] == "heartbeat"):
+                id_and_imei = str(decoded_message["device_id"]) + str(":") + str(decoded_message["IMEI"])
+                respacket = get_heartbeat_responce(id_and_imei)
+                print(respacket)
+                client_socket.send(respacket.encode('utf-8'))
+
+            
+            
+            #send_data_to_django_server(django_server_url, decoded_message)
             #DataRecord.objects.create(data=decoded_data)
         except ConnectionResetError:
             break

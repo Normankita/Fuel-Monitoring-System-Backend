@@ -33,21 +33,16 @@ def utf16_to_ascii(utf16_str):
 def s32(value):
     return -(value & 0x80000000) | (value & 0x7fffffff)
 
-def compute_anc_compare_crc(received_message, received_crc):
+def compute_anc_compare_crc(received_message, received_crc_str):
    # received_message = received_message.replace(received_crc , '')
     print(received_message)
-    computed_crc = 0;
-    
-    for c in received_message:
-        computed_crc += ord(c);
-        
+    computed_crc = get_checksum_int(received_message)
     print()
     print(computed_crc)
-    print(int(received_crc, 16));
+    received_crc = int(received_crc_str, 16)
+    print(received_crc)
     print()
-        
-    computed_crc = 0;
-    return (computed_crc == int(received_crc, 16))
+    return (computed_crc == received_crc)
 
 
 
@@ -125,8 +120,13 @@ def decode_A_report(message):
     ack = sensor_readings[3]
     
     #Decode Cyclic Redundancy Check (CRC) (From Index 4 of message parts list) 
-    crc = parts[4] 
+    received_crc = parts[4] 
+
+    crc_computed_message = str(parts[2]) + str(" ") + str(parts[3]) + str(" ")
     
+    print()
+    print(compute_anc_compare_crc(crc_computed_message, received_crc))
+    print()
     
     #convert time
     yy, mm, dd, hh, mi, ss = time[:2], time[2:4], time[4:6], time[6:8], time[8:10], time[10:12]
@@ -313,7 +313,11 @@ def decode_A_K(message):
     
     #Compute CRC of the received data and compare with the received CRC
     #if (compute_anc_compare_crc(message, received_crc) == True)
-
+    crc_computed_message = parts[2] + str(" ")
+    print()
+    print(compute_anc_compare_crc(crc_computed_message, received_crc))
+    print()
+    
     
     #Decode Data (Index 3 of message parts list), get 5 elements
     report_data = str(parts[3]).split(',')
