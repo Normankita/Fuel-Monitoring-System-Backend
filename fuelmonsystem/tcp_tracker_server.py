@@ -12,7 +12,7 @@ import http.client
 from urllib.parse import urlparse
 
 #Globals
-django_server_url = 'http://172.17.20.209:8000/report/' # Django server URL
+django_server_url = 'http://18.217.109.178:8000/report/' # Django server URL
 
 
 def send_data_to_django_server(url, data):
