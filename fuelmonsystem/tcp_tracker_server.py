@@ -33,8 +33,6 @@ def utf16_to_ascii(utf16_str):
 def s32(value):
     return -(value & 0x80000000) | (value & 0x7fffffff)
 
-
-
 def compute_anc_compare_crc(received_message, received_crc):
    # received_message = received_message.replace(received_crc , '')
     print(received_message)
@@ -50,7 +48,6 @@ def compute_anc_compare_crc(received_message, received_crc):
         
     computed_crc = 0;
     return (computed_crc == int(received_crc, 16))
-    
 
 
 
@@ -62,30 +59,24 @@ def decode_A_report(message):
     #print(parts);
     #['A', 'P', '6666:869731053615829', '230320064050|7DE9478|1921F540|2E|0|0|40000000,S2D7|4C1,1.00,C128,1:0:FFFF:EH17:PW11.4||CR50A_1.27|', '1C57']
     
-    
     #Decode DeviceID and Imei (Index 2 of message parts list), get 2 elements
     dev_id_and_imei = str(parts[2]).split(':')
     device_id = dev_id_and_imei[0]
     imei = dev_id_and_imei[1]
 
-    
     #Decode Data (Index 3 of message parts list), get 5 elements
     report_data = str(parts[3]).split(',')
     #print(len(report_data))
 
-   
-   
     ##Decode Location (index 0 of report data) 7 elements
     location_data = str(report_data[0]).split("|")
     ###Loc_data__Time(index 0)
     time = location_data[0]
 
-    
     ###Loc_data__Latitude (index 1)     ###Loc_data__Longitude (index 2)
     latitude_hex = location_data[1]
     longitude_hex = location_data[2]
    
-    
     ###Loc_data__Altitude (index 3)
     altitude_hex = location_data[3]
     
@@ -137,7 +128,6 @@ def decode_A_report(message):
     crc = parts[4] 
     
     
-
     #convert time
     yy, mm, dd, hh, mi, ss = time[:2], time[2:4], time[4:6], time[6:8], time[8:10], time[10:12]
     formatted_time = f"20{yy}-{mm}-{dd} {hh}:{mi}:{ss}"
@@ -179,9 +169,7 @@ def decode_A_report(message):
         "engine_hours": eh,
         "power_level_volts": pw
     }
-    
-   # print(decoded_data["Time"])
-
+    #print(decoded_data["Time"])
     return decoded_data
 ##End of decode_A_report packet decoder
  
