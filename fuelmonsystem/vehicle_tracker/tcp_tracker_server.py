@@ -153,9 +153,9 @@ def decode_A_report(message):
 
     crc_computed_message = str(parts[2]) + str(" ") + str(parts[3]) + str(" ")
     
-    print()
-    print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
-    print()
+    #print()
+    #print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    #print()
     
     #convert time
     yy, mm, dd, hh, mi, ss = time[:2], time[2:4], time[4:6], time[6:8], time[8:10], time[10:12]
@@ -343,9 +343,9 @@ def decode_A_K(message):
     #Compute CRC of the received data and compare with the received CRC
     #if (compute_anc_compare_crc(message, received_crc) == True)
     crc_computed_message = parts[2] + str(" ")
-    print()
-    print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
-    print()
+    #print()
+    #print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    #print()
     
     
     #Decode Data (Index 3 of message parts list), get 5 elements
