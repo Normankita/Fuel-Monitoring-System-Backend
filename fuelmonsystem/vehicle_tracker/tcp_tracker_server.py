@@ -33,8 +33,8 @@ def get_checksum_int(message):
     for c in message:
         checksum_int += ord(c)
     return checksum_int        
-        
-
+    
+    
 def get_heartbeat_responce(device_id_and_imei):
     resp = str("C R ") #Header
     resp += device_id_and_imei #Device id
@@ -43,6 +43,18 @@ def get_heartbeat_responce(device_id_and_imei):
     resp += str(format(get_checksum_int(device_id_and_imei + flag), 'x')).upper()
     resp += str("\r\n")
     return resp
+
+def make_get_loc_request_packet(device_id_and_imei):
+    req_header = "C M "
+    
+    req_packet = "6 "
+    req_packet += device_id_and_imei
+    req_packet += str('|') + str(2) + str('| ')
+    req_packet += str(format(get_checksum_int(req_packet), 'x')).upper() 
+    req_packet =  req_header + req_packet
+    req_packet += str("\r\n")
+    return req_packet
+
 
 def utf16_to_ascii(utf16_str):
     return bytes.fromhex(utf16_str).decode('utf-16')
@@ -56,7 +68,7 @@ def compute_anc_compare_crc(received_message, received_crc_str):
     computed_crc = get_checksum_int(received_message)
     print()
     print(computed_crc)
-    received_crc = int(received_crc_str, 16)
+    received_crc = int(re.sub(r'[^0-9a-fA-F]', '', received_crc_str), 16)
     print(received_crc)
     print()
     return (computed_crc == received_crc)
@@ -142,7 +154,7 @@ def decode_A_report(message):
     crc_computed_message = str(parts[2]) + str(" ") + str(parts[3]) + str(" ")
     
     print()
-   # print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
     print()
     
     #convert time
@@ -332,7 +344,7 @@ def decode_A_K(message):
     #if (compute_anc_compare_crc(message, received_crc) == True)
     crc_computed_message = parts[2] + str(" ")
     print()
-    #print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
+    print(compute_anc_compare_crc(crc_computed_message, str(received_crc)))
     print()
     
     
@@ -434,10 +446,12 @@ def handle_client(client_socket):
                 respacket = get_heartbeat_responce(id_and_imei)
                 print(respacket)
                 client_socket.send(respacket.encode('utf-8'))
+                
+                loc_req_pct = make_get_loc_request_packet(id_and_imei)
+                client_socket.send(loc_req_pct.encode('utf-8'))
 
             
-            
-            #send_data_to_django_server(django_server_url, decoded_message)
+            send_data_to_django_server(django_server_url, decoded_message)
             #DataRecord.objects.create(data=decoded_data)
         except ConnectionResetError:
             break
